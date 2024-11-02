@@ -3,11 +3,16 @@ import mongoose from 'mongoose';
 import User from '$lib/db/models/User';
 //import bcrypt from 'bcryptjs'; // Para criptografar a senha
 import * as crypto from 'crypto';
-import { AUTH_CONFIG_SECRET } from '$env/static/private';
+
+import { config } from 'dotenv';
+config();
+
+const MONGO_URL = process.env.MONGO_URL;
+const AUTH_CONFIG_SECRET = process.env.MONGO_URL;
 
 // Conectar ao MongoDB
 try {
-    await mongoose.connect('mongodb://adm:123@localhost:9300/fargodb?authSource=admin', {
+    await mongoose.connect(MONGO_URL, {
         // Configurações padrão são usadas
     });
 } catch (error) {
