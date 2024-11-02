@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
+    ports:
+      - 27017:27017
+    networks:
+      - backend  
+
+  sveltekit:
+    image: node:23
+    working_dir: /app
+    volumes:
+      - ./testapp2:/app
+    command: sh -c "npm ci && npm run build && npm run preview -- --host"
+    environment:
+      - MONGO_URL=mongodb://user:pass@mongodb:27017
+      - AUTH_CONFIG_SECRET=123
+    ports:
+      - "9301:4173"
+    depends_on:
+      - mongodb
+    networks:
+      - backend 
+
+networks:
+  backend:
+    driver: bridge  
