@@ -7,16 +7,24 @@
 	let tabSet: number = 0;
 
 	export let data;
-
+	
 	let tabs = data.tabs;
 	let papers = data.papersData;
+	// let publishedPapers = data.papersData[4];
+	let publishedPapers = papers.flat().filter((paper: { status: string; }) => paper.status === 'published');
+
+	let user = data.user;
+
 	console.log("Publish tabs", tabs)
 	console.log("Publish papers", papers)
+	console.log("Publish user", user);
+	console.log("Publish paper", publishedPapers);
 </script>
 
 <div class="container page p-4 m-auto">
 	<div>
-		<AuthorDashboard></AuthorDashboard>
+		<!-- <AuthorDashboard> </AuthorDashboard> -->
+		<AuthorDashboard {user} {publishedPapers}/>
 	</div>
 	<div class="text-xl font-bold mb-6">Your Activities</div>
 

@@ -23,6 +23,7 @@ export const PaperSchema: Schema = new Schema({
     score: { type: Number, default: 0, min: 0, max: 5 }, // Campo para a pontuação da publicação, com um valor padrão de 0 e limite de 0 a 5
     authors: [{ type:  String, ref: 'User' }],
 	peer_review: { type: String },
+    // peer_review: [{ type: String, ref: 'Review' }], // Agora este campo faz referência ao ReviewSchema
     /* peer_review: {
         type: {
             reviewType: { type: String, enum: ['open', 'selected'], required: true }, // Tipo de revisão: 'open' para qualquer revisor, 'selected' para revisores específicos

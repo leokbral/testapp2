@@ -1,21 +1,56 @@
 <script lang="ts">
-	let publishedArticles = 10;
-	let articlesInReview = 3;
-	let notifications = 2;
-	let readyForProofreading = 4;
-	let requiresAttention = 3;
-	let underNegotiation = 1;
-	let drafts = 5;
-	let pendingApproval = 2;
-	let upcomingDeadlines = 1;
-	let messages = 4;
-	let followers = 150;
-	let profileViews = 75;
-	let totalCitations = 120;
-	let averageReviewTime = 15; // in days
-	let acceptanceRate = 85; // in percentage
-	let impactFactor = 4.2;
-	let needingCorrections = 2;
+	// let publishedArticles = 10;
+	// let articlesInReview = 3;
+	// let notifications = 2;
+	// let readyForProofreading = 4;
+	// let requiresAttention = 3;
+	// let underNegotiation = 1;
+	// let drafts = 5;
+	// let pendingApproval = 2;
+	// let upcomingDeadlines = 1;
+	// let messages = 4;
+	// let followers = 150;
+	// let profileViews = 75;
+	// let totalCitations = 120;
+	// let averageReviewTime = 15; // in days
+	// let acceptanceRate = 85; // in percentage
+	// let impactFactor = 4.2;
+	// let needingCorrections = 2;
+
+	export let user; // Certifique-se de que o user está sendo passado para o componente
+    export let publishedPapers; // Recebe os papers publicados passados do servidor
+
+    console.log("Está sendo passado o user no AuthorDashboard", user);
+    console.log("Papers publicados:", publishedPapers);
+
+    let totalCitations = 0;
+    let publishedArticles = 0;
+    let averageReviewTime = 0;
+    let highestScorePublication = { score: 0 };
+
+    // Verifique se user e suas publicações estão definidos antes de usá-los
+    if (user && publishedPapers) {
+        // Calcular o total de citações
+        totalCitations = publishedPapers.reduce((sum: number, paper: { citations: any[] }) => sum + (paper.citations.length || 0), 0);
+
+        // Calcular o número de artigos publicados
+        publishedArticles = publishedPapers.length;
+
+        // Calcular o tempo médio de revisão (em dias)
+        if (publishedPapers.length) {
+            averageReviewTime = publishedPapers.reduce(
+                (sum: number, paper: { reviewDate: string | number | Date; createdAt: string | number | Date }) =>
+                    sum + (new Date(paper.reviewDate).getTime() - new Date(paper.createdAt).getTime()),
+                0
+            ) / publishedPapers.length / (1000 * 3600 * 24);
+        }
+
+        // Obter a publicação com a maior pontuação
+        highestScorePublication = publishedPapers.reduce(
+            (max: { score: number }, paper: { score: number }) => (paper.score > max.score ? paper : max),
+            { score: 0 }
+        );
+    }
 </script>
 
 <section>
@@ -23,8 +58,8 @@
 		<!-- <div class="text-xl font-bold mb-6">Your Activities</div> -->
 
 		<!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6"> -->
-			<!-- <button> -->
-			<!-- <div class="relative">
+		<!-- <button> -->
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -74,7 +109,7 @@
 				</p>
 				<! -- <p class="text-ls">{messages}</p> -- >
 			</div> -->
-			<!-- <div class="relative">
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -100,7 +135,7 @@
 				<! -- <p class="text-ls">{articlesInReview}</p> -- >
 			</div> -->
 
-			<!-- <div class="relative">
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -153,7 +188,7 @@
 				</p>
 			</div> -->
 
-			<!-- <div class="relative">
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -286,18 +321,18 @@
 				</p>
 				<! -- <p class="text-ls">{readyForProofreading}</p> -- >
 			</div> -->
-			<!-- </button> -->
-			<!-- <button> -->
+		<!-- </button> -->
+		<!-- <button> -->
 
-			<!-- </button> -->
-			<!-- <button> -->
+		<!-- </button> -->
+		<!-- <button> -->
 
-			<!-- </button> -->
-			<!-- <button> -->
+		<!-- </button> -->
+		<!-- <button> -->
 
-			<!-- </button> -->
-			<!-- <button> -->
-			<!-- <div class="relative">
+		<!-- </button> -->
+		<!-- <button> -->
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -322,15 +357,15 @@
 				</p>
 				<! -- <p class="text-ls">{pendingApproval}</p> -- >
 			</div> -->
-			<!-- </button> -->
-			<!-- <button> -->
+		<!-- </button> -->
+		<!-- <button> -->
 
-			<!-- </button> -->
-			<!-- <button> -->
+		<!-- </button> -->
+		<!-- <button> -->
 
-			<!-- </button> -->
-			<!-- <button> -->
-			<!-- <div class="relative">
+		<!-- </button> -->
+		<!-- <button> -->
+		<!-- <div class="relative">
 				<p
 					class="text-ls font-semibold flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:underline transition duration-300 ease-in-out cursor-pointer"
 				>
@@ -382,7 +417,7 @@
 				</p>
 				<! -- <p class="text-ls">{profileViews}</p> -- >
 			</div> -->
-			<!-- </button> -->
+		<!-- </button> -->
 		<!-- </div> -->
 
 		<!-- <div class="text-2xl font-bold mb-4">Quick Actions</div>
@@ -402,7 +437,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 			<div class="bg-white p-4 shadow rounded text-surface-900">
 				<p class="text-lg font-semibold">Total Publications</p>
-				<p class="text-2xl">{totalCitations}</p>
+				<p class="text-2xl">{publishedArticles}</p>
 			</div>
 			<div class="bg-white p-4 shadow rounded text-surface-900">
 				<p class="text-lg font-semibold">Total Citations</p>
@@ -410,13 +445,14 @@
 			</div>
 			<div class="bg-white p-4 shadow rounded text-surface-900">
 				<p class="text-lg font-semibold">Average Review Time (days)</p>
-				<p class="text-2xl">{averageReviewTime}</p>
+				<p class="text-2xl">{averageReviewTime.toFixed()}</p>
 			</div>
 			<div class="bg-white p-4 shadow rounded text-surface-900">
 				<p class="text-lg font-semibold">Highest Score Publication</p>
-				<p class="text-2xl">{averageReviewTime}</p>
+				<p class="text-2xl">{highestScorePublication.title || 'N/A'}</p>
 			</div>
-			<!-- <div class="bg-white p-4 shadow rounded text-surface-900">
+		</div>
+		<!-- <div class="bg-white p-4 shadow rounded text-surface-900">
 				<p class="text-lg font-semibold">Acceptance Rate (%)</p>
 				<p class="text-2xl">{acceptanceRate}</p>
 			</div>
@@ -424,7 +460,6 @@
 				<p class="text-lg font-semibold">Impact Factor</p>
 				<p class="text-2xl">{impactFactor}</p>
 			</div> -->
-		</div>
 	</div>
 </section>
 

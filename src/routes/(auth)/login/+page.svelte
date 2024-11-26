@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import Splash from '$lib/components/Splash.svelte';
 
-	let email = '';
+	let login = '';
 	let password = '';
 	let formWarning = '';
 	let processing = false;
@@ -16,13 +16,13 @@
 
 	async function submit(event: unknown) {
 		hideSplash();
-		const response = await post(`/login`, { email, password });
+		const response = await post(`/login`, { login, password });
 
 		if (response.user) {
 			goto('/');
 		} else {
 			hideSplash();
-			formWarning = 'Credênciais não encontradas!';
+			formWarning = 'Credentials not found!';
 		}
 	}
 </script>
@@ -48,10 +48,10 @@
 			<div class="flex flex-col gap-5 w-full">
 				<fieldset class="flex flex-col">
 					<input
-						type="email"
+						type="text"
 						required
-						placeholder="Email"
-						bind:value={email}
+						placeholder="Email or Username"
+						bind:value={login}
 						class="bg-transparent rounded-xl border-b border-surface-500 text-black font-medium text-lg p-2 w-full focus:outline-none focus:border-primary-500 placeholder-gray-500"
 					/>
 				</fieldset>
@@ -71,7 +71,7 @@
 				{/if}
 			</div>
 			{#if processing}
-				<span class="text-purple-500">Processando...</span>
+				<span class="text-purple-500">Processing...</span>
 			{/if}
 			<div class="flex flex-col mt-12 w-full">
 				<button

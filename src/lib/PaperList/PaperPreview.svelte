@@ -42,9 +42,26 @@
 							</a>
 						</div>
 
+						<!-- Coautores -->
 						{#each paper.coAuthors as ca}
 							<a href="/profile/{ca.username}">
-								<Avatar src={ca.profilePictureUrl} alt={ca.username} width="w-9" />
+								{#if ca.profilePictureUrl}
+									<Avatar src={ca.profilePictureUrl} alt={ca.username} width="w-9" />
+								{:else if ca.firstName && ca.lastName}
+									<div
+										class="w-9 h-9 flex items-center justify-center bg-gray-300 text-white rounded-full"
+									>
+										<span class="text-2xl font-bold">
+											{getInitials(ca.firstName, ca.lastName)}
+										</span>
+									</div>
+								{:else}
+									<div
+										class="w-9 h-9 flex items-center justify-center bg-gray-300 text-white rounded-full"
+									>
+										<span class="text-sm font-bold">N/A</span>
+									</div>
+								{/if}
 							</a>
 							<div class="flex flex-col justify-center">
 								<a class="text-primary-500" href="/profile/{ca.username}">
