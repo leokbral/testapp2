@@ -29,7 +29,8 @@
 		{ name: 'Contact Info', icon: 'material-symbols-light:contact-mail-outline' }
 	];
 
-	let publications: Paper[] = user?.papers || [];
+	// let publications: Paper[] = user?.papers || [];
+	let publications: Paper[] = user?.papers.filter((paper) => paper.status === 'published') || [];
 	let interestAreas: string[] = user?.performanceReviews?.expertise || [];
 	let contactInfo = user?.email || '';
 
@@ -68,7 +69,7 @@
 
 			// Save logic here, make an API call to save changes
 			try {
-				const response = await fetch("/profile/${user.username}", {
+				const response = await fetch('/profile/${user.username}', {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json'

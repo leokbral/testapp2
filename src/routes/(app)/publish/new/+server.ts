@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 //import Users from '$lib/db/models/User';
 import { start_mongo } from '$lib/db/mongooseConnection';
 import Papers from '$lib/db/models/Paper';
+import Users from '$lib/db/models/User';
 import type { User } from '$lib/types/User';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -39,6 +40,23 @@ export const POST: RequestHandler = async ({ request }) => {
 
         // Salva o usuário no banco de dados
         await newPaper.save();
+
+        // Buscar e atualizar o autor principal
+        const user = await Users.findById(mainAuthor.id);
+        if (!user) {
+            return json({ error: 'Autor principal não encontrado.' }, { status: 404 });
+        }
+        user.papers.push(newPaper.id);
+        await user.save();
+
+        // Buscar e atualizar os coautores
+        for (const coAuthorId of _coAuthors) {
+            const coAuthor = await Users.findById(coAuthorId);
+            if (coAuthor) {
+                coAuthor.papers.push(newPaper.id);  // Adiciona o artigo ao coautor
+                await coAuthor.save();  // Salva as alterações do coautor
+            }
+        }
 
         // Resposta de sucesso
         return json({ paper: { id: newPaper.id } }, { status: 201 });

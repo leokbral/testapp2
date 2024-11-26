@@ -7,6 +7,7 @@
 	export let data: PageData;
 
 	let papers: Paper[] = data.papers;
+	let user = data.user;
 	//console.log(papers)
 
 	let tabs = [
@@ -47,7 +48,8 @@
 
 	let publishData = {
 		tabs,
-		papersData
+		papersData,
+		user
 	};
 
 	//let src = 'https://www.biorxiv.org/content/10.1101/2020.05.28.119461v1.full.pdf';
