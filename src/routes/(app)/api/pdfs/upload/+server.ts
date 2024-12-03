@@ -188,7 +188,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',  // Permite qualquer origem (ajustar em produção)
+                    'Access-Control-Allow-Origin': 'https://hungria.imd.ufrn.br',  // Permite qualquer origem (ajustar em produção)
                     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 }
@@ -202,7 +202,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',  // Permite qualquer origem (ajustar em produção)
+                    'Access-Control-Allow-Origin': 'https://hungria.imd.ufrn.br',  // Permite qualquer origem (ajustar em produção)
                     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 }
