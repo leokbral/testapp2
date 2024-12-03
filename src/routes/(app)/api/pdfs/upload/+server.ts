@@ -63,10 +63,6 @@
 // }
 
 
-// //   // Exemplo de uso com Express
-// //   app.get('/download/:id', getPdfByCustomId);
-
-
 // export const POST: RequestHandler = async ({ request }) => {
 
 //     const formData = await request.formData();
@@ -126,14 +122,10 @@ async function savePDF(file: File) {
     const dbFile = await fsFiles.findOne({ 'metadata.fileHash': fileHash });
 
     if (!dbFile) {
-        console.log('Iniciando conversão do arquivo para buffer...');
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        console.log('Buffer do arquivo gerado:', buffer);
-
         const stream = Readable.from(buffer);
 
-        console.log('Iniciando upload para o MongoDB...');
         const uploadStream = bucket.openUploadStream(file.name, {
             contentType: file.type,
             metadata: {
@@ -149,12 +141,11 @@ async function savePDF(file: File) {
                 console.error('Erro ao salvar o arquivo:', error);
             })
             .on('finish', () => {
-                console.log('Arquivo salvo com sucesso no GridFS!');
+                console.log('Arquivo salvo com sucesso!');
             });
-
         return customId;
     } else {
-        console.log("Arquivo já existe no banco de dados!");
+        console.log("Already in DB!");
         return dbFile.metadata.id;
     }
 }
@@ -167,45 +158,50 @@ async function getUniqueFileHash(file: File): Promise<string> {
 }
 
 export const POST: RequestHandler = async ({ request }) => {
+    // Adicionando cabeçalhos CORS
+    const responseHeaders = {
+        'Access-Control-Allow-Origin': '*',  // Permite qualquer origem (cuidado em produção)
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+
+    // Verificando se a requisição é uma "preflight" (OPTIONS)
+    if (request.method === 'OPTIONS') {
+        return new Response(null, {
+            status: 200,
+            headers: responseHeaders,
+        });
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
         return new Response(JSON.stringify({ message: 'No file uploaded' }), {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json', ...responseHeaders },
         });
     }
 
     try {
-        console.log('Iniciando upload...');
+        console.log('Starting upload...');
         const result = await savePDF(file);
-        console.log('Upload concluído.');
+        console.log('Upload completed.');
 
         return new Response(
             JSON.stringify({ result }),
             {
                 status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://hungria.imd.ufrn.br',  // Permite qualquer origem (ajustar em produção)
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                }
+                headers: { 'Content-Type': 'application/json', ...responseHeaders },
             }
         );
     } catch (err) {
-        console.error('Falha no upload:', err);
+        console.error('Upload failed:', err);
         return new Response(
             JSON.stringify({ message: 'Failed to upload file', error: (err as Error).message }),
             {
                 status: 500,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://hungria.imd.ufrn.br',  // Permite qualquer origem (ajustar em produção)
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                }
+                headers: { 'Content-Type': 'application/json', ...responseHeaders },
             }
         );
     }

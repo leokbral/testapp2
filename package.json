@@ -48,6 +48,7 @@
     "@faker-js/faker": "^8.4.1",
     "@floating-ui/dom": "1.6.10",
     "@iconify/svelte": "^4.0.2",
+    "cors": "^2.8.5",
     "highlight.js": "11.10.0",
     "mongoose": "^8.5.4"
   }
