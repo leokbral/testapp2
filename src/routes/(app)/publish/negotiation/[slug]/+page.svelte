@@ -32,26 +32,52 @@
 		};
 	}
 
-	async function handleSavePaper(event: { detail: { store: Paper } }) {
-		console.log('Updated Paper Data:', event.detail.store);
+	// async function handleSavePaper(event: { detail: { store: Paper } }) {
+	// 	console.log('Updated Paper Data:', event.detail.store);
 
-		const updatedPaper = event.detail.store;
-		console.log('Saving Updated Paper:', updatedPaper);
+	// 	const updatedPaper = event.detail.store;
+	// 	console.log('Saving Updated Paper:', updatedPaper);
+
+	// 	try {
+	// 		const response = await post(`/publish/negotiation/${updatedPaper.id}`, updatedPaper); // Use id se for o campo correto
+
+	// 		if (response.paper) {
+	// 			// Redireciona para a página de detalhes do artigo editado
+	// 			goto(`/publish/`);
+	// 		} else {
+	// 			alert(`Issue! ${JSON.stringify(response)}`);
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		alert('An error occurred. Please try again.');
+	// 	}
+	// }
+	async function handleSavePaper(event: MouseEvent) {
+		console.log('Saving Paper:', paper);
+
+		if (!paper) return;
+
+		// Prepare the updated paper data
+		const updatedPaper = {
+			...paper,
+			selectedReviewers: selectedReviewers // Add selected reviewers
+		};
 
 		try {
-			const response = await post(`/publish/negotiation/${updatedPaper.id}`, updatedPaper); // Use id se for o campo correto
+			const response = await post(`/publish/negotiation/${updatedPaper.id}`, updatedPaper);
 
 			if (response.paper) {
 				// Redireciona para a página de detalhes do artigo editado
 				goto(`/publish/`);
 			} else {
-				alert(`Issue! ${JSON.stringify(response)}`);
+				alert(`Issue: ${JSON.stringify(response)}`);
 			}
 		} catch (error) {
 			console.log(error);
 			alert('An error occurred. Please try again.');
 		}
 	}
+
 	let selectedReviewers: string[] = [];
 
 	// Define the toggle function
@@ -78,7 +104,7 @@
 		<button class="bg-primary-500 text-white rounded-lg px-4 py-2" on:click={hdlSaveDraft}
 			>Save Draft</button
 		>
-		<button class="bg-primary-500 text-white rounded-lg px-4 py-2" on:click={hdlSubmit}
+		<button class="bg-primary-500 text-white rounded-lg px-4 py-2" on:click={handleSavePaper}
 			>Submit to Review</button
 		>
 	</div>
@@ -86,7 +112,6 @@
 </div>
 
 {#if paper}
-	
 	<div class="container page max-w-[700px] p-4 m-auto">
 		<div class="row">
 			<div class="col-md-9">
@@ -95,17 +120,17 @@
 				<PaperPreview {paper} user={$page.data.user} />
 			</div>
 		</div>
-<div class="p-4 border border-surface-300 rounded-lg">
-		<h5 class="text-lg font-semibold mb-2">Price</h5>
-		<label for="price" class="block mb-1">Price</label>
-		<input
-			id="price"
-			type="text"
-			class="w-full p-2 border border-surface-300 rounded-lg"
-			bind:value={paper.price}
-			placeholder="Enter price"
-		/>
-	</div>
+		<div class="p-4 border border-surface-300 rounded-lg">
+			<h5 class="text-lg font-semibold mb-2">Price</h5>
+			<label for="price" class="block mb-1">Price</label>
+			<input
+				id="price"
+				type="text"
+				class="w-full p-2 border border-surface-300 rounded-lg"
+				bind:value={paper.price}
+				placeholder="Enter price"
+			/>
+		</div>
 		<!-- Peer Review Options -->
 		<label for="peer_review" class="block mb-1">Peer Review Options</label>
 		<select

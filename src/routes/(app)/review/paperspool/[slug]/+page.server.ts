@@ -6,7 +6,7 @@ import { error, redirect } from '@sveltejs/kit';
 export async function load({ locals, params }) {
 	if (!locals.user) redirect(302, `/login`);
 
-	const paper = await Papers.findOne({ id: params.slug }, {}).populate("authors").populate("mainAuthor").populate("coAuthors").lean().exec();
+	const paper = await Papers.findOne({ id: params.slug }, {}).populate("authors").populate("mainAuthor").populate("coAuthors").populate('reviewers').lean().exec();
 
 	const fetchUsers = async () => {
 		const users = await Users.find({},{}).lean().exec();
