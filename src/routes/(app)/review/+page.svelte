@@ -8,6 +8,7 @@
 	// let papers = data.papers;
 	let papers: Paper[] = data.papers;
 	// console.log(data)
+	let reviews = data.reviews;
 
 	let tabs = [
 		{
@@ -42,7 +43,9 @@
 	let papersData = [papersPool, inReview, correction, reviewed];
 	let publishData = {
 		tabs,
-		papersData
+		papersData,
+		reviews,
+		user
 	};
 </script>
 

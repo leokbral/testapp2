@@ -1,9 +1,9 @@
 <script lang="ts">
 	export let papersData;
-	export let rota:string = ''
-	
-	const papers:Paper[] = papersData.papersData[0]
-	console.log(papers)
+	export let rota: string = '';
+
+	const papers: Paper[] = papersData.papersData[0];
+	console.log(papers);
 	export let user; // Selecionar o primeiro usuário na lista para demonstração
 
 	let tabSet: number = 0;
@@ -12,11 +12,27 @@
 	import Abstract from '$lib/components/hope/Abstract.svelte';
 	import PaperList from '$lib/PaperList/index.svelte';
 	import type { Paper } from '$lib/types/Paper';
+	import { writable } from 'svelte/store';
 	const modalStore = getModalStore();
 
+	// ------------------------FILTROS------------------------
+	// Stores para os filtros
+	const minPrice = writable<number | null>(null);
+	const maxPrice = writable<number | null>(null);
+	const numberOfReviewers = writable<number | null>(null);
+
+	// Função para aplicar os filtros
+	const applyFilters = () => {
+		console.log({
+			minPrice: $minPrice,
+			maxPrice: $maxPrice,
+			numberOfReviewers: $numberOfReviewers
+		});
+		// Aqui você pode chamar uma API ou filtrar os dados localmente
+	};
+	// ------------------------FILTROS------------------------
 	const modal: ModalSettings = {
 		type: 'component',
-		// Data
 		title: 'Example Alert',
 		body: 'This is an example modal.',
 		image: '',
@@ -40,34 +56,68 @@
 
 	<!-- Sections -->
 	<div class="flex flex-col md:flex-row gap-8 mt-4">
-		<!-- Filter -->
-		<section>
-			<div class="bg-white shadow-md rounded p-6 mb-8 max-w-xs">
-				axaaaaaaaaaaaaaaaaaaaaasdasda
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<p>axaaaaaaaaaaaaaaaaaaaaasdasda</p>
-				<div class="card">Price:</div>
-				<div class="flex grid-cols-2 gap-24">
-					<div class="card">Min.</div>
-					<div class="card">Max.</div>
+		<!-- Filter Section -->
+		<section class="bg-gray-100 rounded-lg shadow-md p-4 mb-8 w-full md:w-1/5">
+			<h2 class="text-lg font-semibold mb-4">Filters</h2>
+
+			<div class="mb-4 flex space-x-4">
+				<!-- Min Price -->
+				<div class="flex-1">
+					<label for="min-price" class="block text-sm font-medium mb-1">Min Price:</label>
+					<input
+						type="number"
+						class="w-full h-8 p-2 border border-gray-300 rounded"
+						bind:value={$minPrice}
+						placeholder="Min."
+						min="0"
+					/>
 				</div>
-				<div class="card">Numbers of reviewers:</div>
-				<div class="card">Price</div>
-				<!-- Your filter content goes here -->
+
+				<!-- Max Price -->
+				<div class="flex-1">
+					<label for="max-price" class="block text-sm font-medium mb-1">Max Price:</label>
+					<input
+						type="number"
+						class="w-full h-8 p-2 border border-gray-300 rounded"
+						bind:value={$maxPrice}
+						placeholder="Max."
+						min="0"
+					/>
+				</div>
 			</div>
+
+			<!-- Number of Reviewers -->
+			<div class="mb-4 flex items-center space-x-2">
+				<!-- <label for="reviewers" class="block text-sm font-medium mb-1">Number of Reviewers:</label> -->
+				<label for="reviewers" class="text-sm font-medium whitespace-nowrap">Number of Reviewers:</label>
+				<input
+					type="number"
+					class="w-full h-8 p-2 border border-gray-300 rounded"
+					bind:value={$numberOfReviewers}
+					min="3"
+				/>
+			</div>
+
+			<!-- Apply Filters Button -->
+			<button
+				class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+				on:click={applyFilters}
+			>
+				Apply Filters
+			</button>
 		</section>
-		<!-- Announced Articles -->
-		<section class="md:col-span-1 flex-grow">
-			<div class="bg-white shadow-md rounded p-6 mb-8">
-				<h3 class="text-xl font-bold mb-4">Announced articles</h3>
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					{#each papers as paper, index}
-					<a data-sveltekit-reload href="{rota}/{paper.id}" class="flex flex-col gap-2 hover:text-secondary-500">
-					<div class="bg-white shadow-md rounded overflow-hidden">
+
+		<!-- Announced Articles Section -->
+		<section class="bg-white shadow-md rounded p-6 mb-8 w-full md:w-4/3">
+			<h3 class="text-xl font-bold mb-4">Announced Articles</h3>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				{#each papers as paper, index}
+					<a
+						data-sveltekit-reload
+						href="{rota}/{paper.id}"
+						class="flex flex-col gap-2 hover:text-secondary-500"
+					>
+						<div class="bg-white shadow-md rounded overflow-hidden">
 							<header>
 								<img src={paper.paperPictures[0]} alt="Post" class="w-full h-48 object-cover" />
 							</header>
@@ -93,13 +143,11 @@
 									<span>{paper.mainAuthor.firstName} {paper.mainAuthor.lastName}</span>
 								</div>
 								<span class="text-gray-600">Price: US$ {paper.price}</span>
-								<!-- <span>Number of reviewers required: {paper.reviewernumb}</span> -->
 								<span>Number of pages: {1}</span>
 							</footer>
 						</div>
 					</a>
-					{/each}
-				</div>
+				{/each}
 			</div>
 		</section>
 	</div>

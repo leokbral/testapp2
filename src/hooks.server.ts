@@ -4,7 +4,7 @@ import * as cookie from 'cookie';
 
 start_mongo().then(() => {
 	console.log('Mongo started');
-}).catch(e => {console.error(e)})
+}).catch(e => { console.error(e) })
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const cookies = cookie.parse(event.request.headers.get('cookie') || '');
@@ -21,6 +21,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const response = await resolve(event);
+	
+	response.headers.set('Access-Control-Allow-Origin', '*');  // Permite todas as origens, você pode restringir para um domínio específico
 	
 	return response;
 };
