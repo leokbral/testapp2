@@ -1,26 +1,73 @@
 <script lang="ts">
-	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	export let reviews: any[] = []; // Garantindo que seja um array vazio por padrão
+	export let user: any = {}; // Garantindo que seja um objeto vazio por padrão
+  
+	let articlesPendingReview = 0;
+	let articlesInReview = 0;
+	let articlesReviewed = 0;
+	let articlesNeedingCorrections = 0;
+	let articlesAwaitingFinalApproval = 0;
+	let notifications = 0;
+	let underNegotiation = 0;
+	let messages = 0;
+	let recentReviewedArticles = 0;
+	let commentsSent = 0;
+	let reviewsRequested = 0;
+	let avgReviewTime = 0;
+	let totalReviewedArticles = 0;
+	let acceptanceRate = 0;
+	let articleImpact = 0;
+	let drafts = 0;
+	let upcomingDeadlines = 0;
+	let averageFeedback = 'N/A';
+	let value = 0; 
+  
+	// Verifique se os dados do revisor estão definidos antes de usá-los
+	if (reviews?.length) {
+	  articlesPendingReview = reviews.filter((review: any) => review.status === 'pending').length;
+	  articlesInReview = reviews.filter((review: any) => review.status === 'in_review').length;
+	  articlesReviewed = reviews.filter((review: any) => review.status === 'reviewed').length;
+	  articlesNeedingCorrections = reviews.filter((review: any) => review.status === 'needs_corrections').length;
+	  articlesAwaitingFinalApproval = reviews.filter((review: any) => review.status === 'awaiting_approval').length;
+	}
+  
+	if (user) {
+	  notifications = user.notifications?.length || 0;
+	  underNegotiation = user.underNegotiation?.length || 0;
+	  messages = user.messages?.length || 0;
+	  commentsSent = user.commentsSent?.length || 0;
+	  reviewsRequested = user.reviewsRequested?.length || 0;
+  
+	  // Calcular o tempo médio de revisão, caso exista o campo 'reviewDate'
+	  if (reviews?.length) {
+		avgReviewTime = reviews.reduce(
+		  (sum: number, review: { reviewDate: string | number | Date; createdAt: string | number | Date }) =>
+			sum + (new Date(review.reviewDate).getTime() - new Date(review.createdAt).getTime()),
+		  0
+		) / reviews.length / (1000 * 3600 * 24); // converter para dias
+	  }
+  
+	  // Calcular a taxa de aceitação (exemplo simples)
+	  articlesReviewed = articlesReviewed || 0;
+	  articlesNeedingCorrections = articlesNeedingCorrections || 0;
+	  if (articlesReviewed > 0) {
+		acceptanceRate = (articlesReviewed - articlesNeedingCorrections) / articlesReviewed * 100;
+	  }
+  
+	  // Definir impacto dos artigos (simulação, pode vir do banco de dados ou de um campo específico)
+	  articleImpact = user.articleImpact || 3.8;
+  
+	  // Calcular o feedback médio (exemplo simples)
+	  if (user.feedback?.avgScore) {
+		averageFeedback = user.feedback.avgScore || 'N/A';
+	  }
+  
+	  // Calcular a porcentagem de progresso ou conclusão
+	  value = (recentReviewedArticles / totalReviewedArticles) * 100;
+	}
+  </script>
+  
 
-	let articlesPendingReview = 5;
-	let articlesInReview = 3;
-	let articlesReviewed = 12;
-	let articlesNeedingCorrections = 3;
-	let articlesAwaitingFinalApproval = 2;
-	let notifications = 4;
-	let underNegotiation = 2;
-	let messages = 3;
-	let recentReviewedArticles = 2;
-	let commentsSent = 6;
-	let reviewsRequested = 3;
-	let avgReviewTime = 10; // in days
-	let totalReviewedArticles = 40;
-	let acceptanceRate = 75; // in percentage
-	let articleImpact = 3.8;
-	let drafts = 5;
-	let upcomingDeadlines = 3;
-	let averageFeedback: string = '4.5/5';
-	let value: number = 50; // %
-</script>
 
 <!-- <section>
 	<div class="p-6 bg-surface-100 mb-4 text-surface-900">

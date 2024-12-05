@@ -9,16 +9,20 @@
 	export let data;
 	//export let tabs;
 	//export let papers;
-	 let tabs = data.tabs;
-	 let papers = data.papersData;
+	let tabs = data.tabs;
+	let papers = data.papersData;
+	let reviews = data.reviews; // Recebendo as revisões
+	let user = data.user;
 
 	console.log('Review tabs', tabs);
 	console.log('Review papers', papers);
+	console.log('Review data', reviews);  // Verificando as revisões
 </script>
 
 <div class="container page p-4 m-auto">
 	<div>
-		<ReviewDashboard></ReviewDashboard>
+		<ReviewDashboard {reviews} {user}></ReviewDashboard>
+		<!--TEM QUE PASSAR OS DADOS DO REVISOR AQUI-->
 	</div>
 	<div class="text-xl font-bold mb-6">Your Activities</div>
 
