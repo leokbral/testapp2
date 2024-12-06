@@ -23,6 +23,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await resolve(event);
 	
 	response.headers.set('Access-Control-Allow-Origin', '*');  // Permite todas as origens, você pode restringir para um domínio específico
+	response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
 	
 	return response;
 };
