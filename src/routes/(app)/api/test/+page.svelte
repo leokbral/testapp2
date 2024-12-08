@@ -30,6 +30,7 @@
 
 		const response = await fetch('/api/pdfs/upload', {
 			method: 'POST',
+			credentials: 'include',
 			body: formData
 		});
 
