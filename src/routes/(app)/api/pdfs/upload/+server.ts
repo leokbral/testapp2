@@ -4,7 +4,7 @@ import { Readable } from 'stream';
 import type { RequestHandler } from '@sveltejs/kit';
 import * as crypto from 'crypto';
 import { fsFiles } from '$lib/db/fs';
-
+console.log("Chamou l7")
 const bucket = new GridFSBucket(db);
 
 async function savePDF(file: File) {
