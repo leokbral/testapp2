@@ -10,6 +10,7 @@ console.log(MONGO_URL)
 
 export function start_mongo() {
 	console.log('Starting mongo...');
+	console.log('Chama l13')
 	return client.connect();
 }
 
