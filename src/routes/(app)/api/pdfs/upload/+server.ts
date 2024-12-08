@@ -8,7 +8,7 @@ import { fsFiles } from '$lib/db/fs';
 const bucket = new GridFSBucket(db);
 
 async function savePDF(file: File) {
-
+console.log("Chamou l11")
     const fileHash = await getUniqueFileHash(file);
     // console.log('File to upload:', {
     //     name: fileHash,
@@ -19,7 +19,7 @@ async function savePDF(file: File) {
 
     const customId = crypto.randomUUID()
     const dbFile = await fsFiles.findOne({ 'metadata.fileHash': fileHash });
-
+    console.log("Chamou l22")
     if (!dbFile) {
         // Converter o File em um Buffer
         const arrayBuffer = await file.arrayBuffer();
@@ -27,7 +27,7 @@ async function savePDF(file: File) {
 
         // Criar uma stream a partir do buffer
         const stream = Readable.from(buffer);
-
+        console.log("Chamou l30")
         // Salvar o arquivo no MongoDB usando GridFS
         const uploadStream = bucket.openUploadStream(file.name, {
             contentType: file.type,
@@ -38,7 +38,7 @@ async function savePDF(file: File) {
                 size: file.size,
             },
         });
-
+        console.log("Chamou l41")
         stream.pipe(uploadStream)
             .on('error', (error) => {
                 console.error('Erro ao salvar o arquivo:', error);
@@ -54,6 +54,7 @@ async function savePDF(file: File) {
 }
 
 async function getUniqueFileHash(file: File): Promise<string> {
+    console.log("Chamou l57")
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const hash = crypto.createHash('sha256').update(buffer).digest('hex');
@@ -68,17 +69,17 @@ async function getUniqueFileHash(file: File): Promise<string> {
 
 
 export const POST: RequestHandler = async ({ request }) => {
-
+    console.log("Chamou l72")
     const formData = await request.formData();
     const file = formData.get('file') as File;
-
+    console.log("Chamou l75")
     if (!file) {
         return new Response(JSON.stringify({ message: 'No file uploaded' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
         });
     }
-
+    console.log("Chamou l82")
     try {
         console.log('Starting upload...');
         // const result = await pdfs.insertOne({

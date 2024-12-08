@@ -144,6 +144,7 @@
 			return data;
 		} else {
 			console.error('Erro ao fazer upload do arquivo:', response.statusText);
+			console.log("response -> ", response)
 		}
 
 		return;
