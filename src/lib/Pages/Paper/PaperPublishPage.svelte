@@ -15,6 +15,7 @@
 	import { storeVercelProductionMode } from '$lib/stores/stores';
 	import { page } from '$app/stores';
 	import SERVER from '../config';
+	import RichTextEditor from '$lib/components/Text/RichTextEditor.svelte';
 
 	let fileName = '';
 
@@ -144,7 +145,7 @@
 			return data;
 		} else {
 			console.error('Erro ao fazer upload do arquivo:', response.statusText);
-			console.log("response -> ", response)
+			console.log('response -> ', response);
 		}
 
 		return;
@@ -208,6 +209,8 @@
 	function save() {
 		dispatch('savePaper', { store: $store });
 	}
+
+	let abstract = $store.abstract;
 </script>
 
 <main class="grid p-5">
@@ -247,7 +250,7 @@
 					name="chips"
 					class="card w-full max-h-48 p-4 overflow-y-auto"
 				/>
-				<div class="card w-full max-h-40 p-4 overflow-y-auto" tabindex="-1">
+				<div class="card w-full max-h-40 mb-4 p-4 overflow-y-auto" tabindex="-1">
 					<Autocomplete
 						bind:input={inputAuthor}
 						options={authorsOptions}
@@ -266,11 +269,11 @@
 				</section>
 			</section> -->
 
-			<div class="w-full mt-4 mb-2">
-				<textarea id="abstract" bind:value={$store.abstract} required class="w-full" contenteditable
-				></textarea>
-				<!-- <div id="abstract"  class="w-full h-80" contenteditable>{@html $store.abstract}</div> -->
-			</div>
+			<section class="mb-4 w-full">
+				<label for="abstract" class="block mb-1">Abstract</label>
+				<RichTextEditor bind:content={abstract} placeholder="Enter the abstract..." />
+			</section>
+
 			<section class="mb-4 w-full">
 				<InputChip
 					bind:value={$store.keywords}
@@ -278,7 +281,7 @@
 					placeholder="Enter article keywords..."
 				/>
 			</section>
-			<label for="peer_review" class="block mb-1">Peer Review Options</label>
+			<!-- <!-- <label for="peer_review" class="block mb-1">Peer Review Options</label>
 			<select
 				id="peer_review"
 				name="peer_review"
@@ -288,7 +291,7 @@
 				<option value="" disabled selected>Select peer review option</option>
 				<option value="open">Open</option>
 				<option value="selected">Selected</option>
-			</select>
+			</select> -- >
 
 			<section class="mb-4 w-full my-4">
 				<label for="price" class="block mb-1">Price</label>
@@ -300,7 +303,7 @@
 					placeholder="Enter price"
 					bind:value={$store.price}
 				/>
-			</section>
+			</section> -->
 
 			<div class="my-4 w-full">
 				<!-- <label for="file">PDF File:</label>
