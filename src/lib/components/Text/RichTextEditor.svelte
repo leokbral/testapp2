@@ -4,7 +4,6 @@
   let editor: any;
   export let content = '';
   export let placeholder = 'Enter text...';
-
   onMount(async () => {
     const Quill = (await import('quill')).default;
 
@@ -18,7 +17,8 @@
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           ['link', 'blockquote', 'code-block'],
           [{ 'align': [] }],
-          ['clean']
+          [{ 'background': [] }],  // Adiciona opção de cor de destaque
+          ['clean']  // 'clean' remove todas as formatações, incluindo destaque
         ]
       }
     });
@@ -36,3 +36,14 @@
 <div class="h-full border border-surface-300 rounded-lg mb-4">
   <div id="editor" class="min-h-[200px]"></div>
 </div>
+
+<style>
+  :global(.ql-editor) {
+    min-height: 200px;
+    height: 100%;
+  }
+  
+  :global(.ql-container) {
+    height: auto !important;
+  }
+</style>

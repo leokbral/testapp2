@@ -20,6 +20,7 @@
 			if (response.paper) {
 				goto(`/publish/new/${response.paper.id}`);
 			} else {
+				console.log(paper);
 				alert(`Issue! ${JSON.stringify(response)}`);
 			}
 		} catch (error) {

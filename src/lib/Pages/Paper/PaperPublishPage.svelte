@@ -210,7 +210,6 @@
 		dispatch('savePaper', { store: $store });
 	}
 
-	let abstract = $store.abstract;
 </script>
 
 <main class="grid p-5">
@@ -271,7 +270,7 @@
 
 			<section class="mb-4 w-full">
 				<label for="abstract" class="block mb-1">Abstract</label>
-				<RichTextEditor bind:content={abstract} placeholder="Enter the abstract..." />
+				<RichTextEditor bind:content={$store.abstract} placeholder="Enter the abstract..." />
 			</section>
 
 			<section class="mb-4 w-full">
@@ -281,7 +280,7 @@
 					placeholder="Enter article keywords..."
 				/>
 			</section>
-			<!-- <!-- <label for="peer_review" class="block mb-1">Peer Review Options</label>
+			<!-- < !-- <label for="peer_review" class="block mb-1">Peer Review Options</label>
 			<select
 				id="peer_review"
 				name="peer_review"
