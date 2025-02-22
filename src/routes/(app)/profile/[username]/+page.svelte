@@ -99,6 +99,15 @@
 			}
 		}
 	}
+
+	async function handleProfilePictureChange(event: Event) {
+		const input = event.target as HTMLInputElement;
+		if (input.files && input.files.length > 0) {
+			const file = input.files[0];
+			// Handle file upload logic here
+			console.log('Selected file:', file);
+		}
+	}
 </script>
 
 <!-- Profile Section -->
@@ -125,41 +134,71 @@
 
 		<!-- Profile Picture and Info -->
 		<div class="flex items-center gap-4 mt-6">
-			<div class="relative w-36 h-36 mr-4">
-				<!-- <Avatar src={profilePictureUrl} width="w-32" class="rounded-full"/> -->
+			<div class="relative group cursor-pointer w-32 h-32">
 				{#if user?.profilePictureUrl}
-					<Avatar src={user.profilePictureUrl} alt={user.firstName} width="w-32" />
+				  <Avatar src={user.profilePictureUrl} alt={user.firstName} width="w-32 h-32" class="rounded-full" />
+				  {#if isEditing}
+					<label
+					  for="profilePicture"
+					  class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center
+					  bg-black bg-opacity-50 opacity-0 group-hover:opacity-100
+					  transition-opacity rounded-full"
+					>
+					  <Icon icon="material-symbols:camera-outline" class="text-white text-2xl" />
+					</label>
+					<input
+					  type="file"
+					  id="profilePicture"
+					  accept="image/*"
+					  class="hidden"
+					  on:change={handleProfilePictureChange}
+					/>
+				  {/if}
 				{:else if user?.firstName && user?.lastName}
-					<div class="size-32 flex items-center justify-center bg-gray-300 text-white rounded-full">
-						<span class="text-5xl font-bold">{getInitials(user.firstName, user.lastName)}</span>
-					</div>
+				  <div class="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
+					<span class="text-5xl font-bold">{getInitials(user.firstName, user.lastName)}</span>
+				  </div>
+				  {#if isEditing}
+					<label
+					  for="profilePicture"
+					  class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center
+					  bg-black bg-opacity-50 opacity-0 group-hover:opacity-100
+					  transition-opacity rounded-full"
+					>
+					  <Icon icon="material-symbols:camera-outline" class="text-white text-2xl" />
+					</label>
+					<input
+					  type="file"
+					  id="profilePicture"
+					  accept="image/*"
+					  class="hidden"
+					  on:change={handleProfilePictureChange}
+					/>
+				  {/if}
 				{:else}
-					<div class="size-32 flex items-center justify-center bg-gray-300 text-white">
-						<span class="text-lg font-bold">ADD PADRAO PARA USER NULL</span>
-					</div>
+				  <div class="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
+					<Icon icon="material-symbols:person" class="text-4xl" />
+				  </div>
+				  {#if isEditing}
+					<label
+					  for="profilePicture"
+					  class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center
+					  bg-black bg-opacity-50 opacity-0 group-hover:opacity-100
+					  transition-opacity rounded-full"
+					>
+					  <Icon icon="material-symbols:camera-outline" class="text-white text-2xl" />
+					</label>
+					<input
+					  type="file"
+					  id="profilePicture"
+					  accept="image/*"
+					  class="hidden"
+					  on:change={handleProfilePictureChange}
+					/>
+				  {/if}
 				{/if}
-			</div>
-
-			<div>
-				<div class="text-2xl font-bold">{user?.firstName} {user?.lastName}</div>
-				<div class="text-base font-semibold">{user?.username}</div>
-				<div class="text-xl mt-4">
-					{#if isEditing}
-						<input
-							type="text"
-							bind:value={editedPosition}
-							class="mt-2 p-2 text-gray-900 border rounded w-full"
-						/>
-						<input
-							type="text"
-							bind:value={editedInstitution}
-							class="mt-2 p-2 text-gray-900 border rounded w-full"
-						/>
-					{:else}
-						{user?.position || 'No position'} at {user?.institution || 'No institution'}
-					{/if}
-				</div>
-			</div>
+			  </div>
+			  
 		</div>
 
 		<!-- Following and Followers Section -->

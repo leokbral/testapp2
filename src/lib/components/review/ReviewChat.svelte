@@ -36,13 +36,16 @@
 	let elemChat: HTMLElement;
 
 	export let data: any;
-	export let currentUser: User; //MODIFICADO
+	export let currentUser: User;
 
-	let messageFeed: MessageFeed = data.messageFeed;
-	let currentMessage = messageFeed.currentMessage;
-
-	//console.log("current user", currentUser);
-	// console.log("messageFeed", messageFeed[0]);
+	// Initialize messageFeed with default values if data.messageFeed is null
+	let messageFeed: MessageFeed = data?.messageFeed ?? {
+		messages: [],
+		currentMessage: ''
+	};
+	
+	// Initialize currentMessage with a default empty string
+	let currentMessage: string = messageFeed?.currentMessage ?? '';
 
 	function scrollChatBottom(behavior?: ScrollBehavior): void {
 		elemChat.scrollTo({ top: elemChat.scrollHeight, behavior });
@@ -89,31 +92,33 @@
 <div class="">
 	<!-- Conversation -->
 	<section bind:this={elemChat} class="max-h-[400px] p-4 overflow-y-auto space-y-4">
-		{#each messageFeed.messages as bubble}
-			{#if bubble.sender.id === currentUser.id}
-				<div class="grid grid-cols-[auto_1fr] gap-2">
-					<Avatar src={bubble.sender.profilePictureUrl} width="w-12" />
-					<div class="card p-4 variant-soft rounded-tl-none space-y-2">
-						<header class="flex justify-between items-center">
-							<p class="font-bold">{bubble.sender.username}</p>
-							<small class="opacity-50">{bubble.timestamp}</small>
-						</header>
-						<p>{bubble.message}</p>
+		{#if messageFeed?.messages}
+			{#each messageFeed.messages as bubble}
+				{#if bubble.sender.id === currentUser.id}
+					<div class="grid grid-cols-[auto_1fr] gap-2">
+						<Avatar src={bubble.sender.profilePictureUrl} width="w-12" />
+						<div class="card p-4 variant-soft rounded-tl-none space-y-2">
+							<header class="flex justify-between items-center">
+								<p class="font-bold">{bubble.sender.username}</p>
+								<small class="opacity-50">{bubble.timestamp}</small>
+							</header>
+							<p>{bubble.message}</p>
+						</div>
 					</div>
-				</div>
-			{:else}
-				<div class="grid grid-cols-[1fr_auto] gap-2">
-					<div class="card p-4 rounded-tr-none space-y-2 variant-soft-primary">
-						<header class="flex justify-between items-center">
-							<p class="font-bold">{bubble.sender.username}</p>
-							<small class="opacity-50">{bubble.timestamp}</small>
-						</header>
-						<p>{bubble.message}</p>
+				{:else}
+					<div class="grid grid-cols-[1fr_auto] gap-2">
+						<div class="card p-4 rounded-tr-none space-y-2 variant-soft-primary">
+							<header class="flex justify-between items-center">
+								<p class="font-bold">{bubble.sender.username}</p>
+								<small class="opacity-50">{bubble.timestamp}</small>
+							</header>
+							<p>{bubble.message}</p>
+						</div>
+						<Avatar src={bubble.sender.profilePictureUrl} width="w-12" />
 					</div>
-					<Avatar src={bubble.sender.profilePictureUrl} width="w-12" />
-				</div>
-			{/if}
-		{/each}
+				{/if}
+			{/each}
+		{/if}
 	</section>
 	<!-- Prompt -->
 	<section class="border-t border-surface-500/30 p-4">
