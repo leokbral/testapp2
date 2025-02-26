@@ -64,11 +64,20 @@
 		};
 
 		try {
+			// First update the negotiation paper
 			const response = await post(`/publish/negotiation/${updatedPaper.id}`, updatedPaper);
 
 			if (response.paper) {
-				// Redireciona para a página de detalhes do artigo editado
-				goto(`/publish/`);
+				// Also update the price in paperspool
+				const poolResponse = await post(`/api/paperspool/${updatedPaper.id}/update-price`, {
+					price: updatedPaper.price
+				});
+
+				if (poolResponse.success) {
+					goto(`/publish/`);
+				} else {
+					alert(`Failed to update price in papers pool: ${JSON.stringify(poolResponse)}`);
+				}
 			} else {
 				alert(`Issue: ${JSON.stringify(response)}`);
 			}
